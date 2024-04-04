@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/lemon-signal",
-	"version": "1.10.0-ts.0",
+	"version": "1.10.0-ts.1",
 	"main": "dist/init.lua",
 	"keywords": [],
 	"author": "kineticwallet",
