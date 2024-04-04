@@ -1,6 +1,6 @@
 {
-	"name": "@rbxts/roblox-ts-package-template",
-	"version": "1.0.0",
+	"name": "@rbxts/lemon-signal",
+	"version": "1.10.0-ts.0",
 	"main": "dist/init.lua",
 	"keywords": [],
 	"author": "kineticwallet",
