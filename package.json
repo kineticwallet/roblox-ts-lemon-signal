@@ -1,6 +1,7 @@
 {
 	"name": "@rbxts/lemon-signal",
-	"version": "1.10.0-ts.1",
+	"version": "1.10.0-ts.2",
+	"description": "A port of data-oriented-house's LemonSignal package for the roblox-ts ecosystem. With additional functionalities.",
 	"main": "dist/init.lua",
 	"keywords": [],
 	"author": "kineticwallet",
@@ -9,6 +10,13 @@
 	"files": ["dist", "!**/*.tsbuildinfo"],
 	"publishConfig": {
 		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kineticwallet/roblox-ts-lemon-signal"
+	},
+	"bugs": {
+		"url": "https://github.com/kineticwallet/roblox-ts-lemon-signal/issues"
 	},
 	"packageManager": "pnpm@8.15.6+sha256.01c01eeb990e379b31ef19c03e9d06a14afa5250b82e81303f88721c99ff2e6f",
 	"devDependencies": {
@@ -19,8 +27,5 @@
 		"rbxts-transformer-services": "^1.1.1",
 		"roblox-ts": "^2.3.0",
 		"typescript": "=5.2.2"
-	},
-	"dependencies": {
-		"@rbxts/services": "^1.5.4"
 	}
 }

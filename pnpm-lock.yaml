@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@rbxts/services':
-    specifier: ^1.5.4
-    version: 1.5.4
-
 devDependencies:
   '@biomejs/biome':
     specifier: ^1.6.4
@@ -125,10 +120,6 @@ packages:
   /@rbxts/compiler-types@2.3.0-types.0:
     resolution: {integrity: sha512-2kllUXLlK22OzSi3GmLT+/O70U9oB2iXp4rGFk5FLwc1pqf4W9EsInuJ0t7poLE2XnqnpW/ojff9CUNivI2+lw==}
     dev: true
-
-  /@rbxts/services@1.5.4:
-    resolution: {integrity: sha512-Klh+gRIT8zy3xRTX1YD6FZ9nAMzkzPLTHmciigt59PEF7PJXo31CF0IU0RegQ7VSMrz1iOnXwxbIwy3htcMfOA==}
-    dev: false
 
   /@rbxts/types@1.0.767:
     resolution: {integrity: sha512-GTHrvI0zTZQi6MZ91pOKgOcIioqwnmZMkRDjORtoD6vvEXSwlL6wcAY26//L3npfFQoz+37SkcLq9PODgRELFA==}
