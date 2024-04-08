@@ -238,4 +238,6 @@ Signal.Fire = fire
 Signal.DisconnectAll = disconnectAll
 Signal.Destroy = destroy
 
-return { new = Signal.new, wrap = Signal.wrap, is = Signal.is }
+return {
+	Signal = { new = Signal.new, wrap = Signal.wrap, is = Signal.is }
+}
