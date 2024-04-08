@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/lemon-signal",
-	"version": "1.10.0-ts.2",
+	"version": "1.10.0-ts.3",
 	"description": "A port of data-oriented-house's LemonSignal package for the roblox-ts ecosystem. With additional functionalities.",
 	"main": "dist/init.lua",
 	"keywords": [],
