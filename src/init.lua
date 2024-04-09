@@ -239,5 +239,5 @@ Signal.DisconnectAll = disconnectAll
 Signal.Destroy = destroy
 
 return {
-	Signal = { new = Signal.new, wrap = Signal.wrap, is = Signal.is }
+	Signal = { new = Signal.new, wrap = Signal.wrap, is = Signal.is },
 }

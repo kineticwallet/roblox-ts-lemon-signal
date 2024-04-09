@@ -16,7 +16,7 @@ export declare class Signal<T> {
 	public readonly RBXScriptConnection?: RBXScriptConnection;
 
 	public static is: <O extends object>(object: O) => boolean;
-	public static wrap: <T extends Callback>(signal: RBXScriptSignal<T>) => Signal<T>;
+	public static wrap: <T extends Callback>(signal: RBXScriptSignal<T>) => Signal<Parameters<T>>;
 
 	public Connect(fn: SignalCallback<T>): Connection<T>;
 	public Once(fn: SignalCallback<T>): Connection<T>;
