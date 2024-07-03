@@ -2,17 +2,21 @@
 --!optimize 2
 --!native
 
-local freeThreads = {}
+local FREE_THREADS = {}
 
 local function runCallback(callback, thread, ...)
 	callback(...)
-	table.insert(freeThreads, thread)
+	table.insert(FREE_THREADS, thread)
 end
 
 local function yielder()
 	while true do
 		runCallback(coroutine.yield())
 	end
+end
+
+local function shouldTrackConnections(self)
+	return self.is(self.OnConnectionsChanged) == true and type(self.TotalConnections) == "number"
 end
 
 local Connection = {}
@@ -38,6 +42,11 @@ local function disconnect(self)
 	if signal._head == self then
 		signal._head = next
 	end
+
+	if shouldTrackConnections(signal) then
+		signal.TotalConnections -= 1
+		signal.OnConnectionsChanged:Fire(-1)
+	end
 end
 
 local function reconnect(self)
@@ -55,8 +64,14 @@ local function reconnect(self)
 
 	self._next = head
 	self._prev = false
+
+	if shouldTrackConnections(signal) then
+		signal.TotalConnections += 1
+		signal.OnConnectionsChanged:Fire(1)
+	end
 end
 
+Connection.Destroy = disconnect
 Connection.Disconnect = disconnect
 Connection.Reconnect = reconnect
 
@@ -88,6 +103,11 @@ local function connect(self, fn, ...)
 		head._prev = cn
 	end
 	self._head = cn
+
+	if shouldTrackConnections(self) then
+		self.TotalConnections += 1
+		self.OnConnectionsChanged:Fire(1)
+	end
 
 	return cn
 end
@@ -129,9 +149,10 @@ local fire = if task
 		local cn = self._head
 		while cn do
 			local thread
-			if #freeThreads > 0 then
-				thread = freeThreads[#freeThreads]
-				freeThreads[#freeThreads] = nil
+			local freeThreadsAmount = #FREE_THREADS
+			if freeThreadsAmount > 0 then
+				thread = FREE_THREADS[freeThreadsAmount]
+				FREE_THREADS[freeThreadsAmount] = nil
 			else
 				thread = coroutine.create(yielder)
 				coroutine.resume(thread)
@@ -162,9 +183,10 @@ local fire = if task
 		local cn = self._head
 		while cn do
 			local thread
-			if #freeThreads > 0 then
-				thread = freeThreads[#freeThreads]
-				freeThreads[#freeThreads] = nil
+			local freeThreadsAmount = #FREE_THREADS
+			if freeThreadsAmount > 0 then
+				thread = FREE_THREADS[freeThreadsAmount]
+				FREE_THREADS[freeThreadsAmount] = nil
 			else
 				thread = coroutine.create(yielder)
 				coroutine.resume(thread)
@@ -204,6 +226,11 @@ local function disconnectAll(self)
 		disconnect(cn)
 		cn = cn._next
 	end
+
+	if shouldTrackConnections(self) then
+		self.OnConnectionsChanged:Fire(-self.TotalConnections)
+		self.TotalConnections = 0
+	end
 end
 
 local function destroy(self)
@@ -213,22 +240,36 @@ local function destroy(self)
 		rbxDisconnect(cn)
 		self.RBXScriptConnection = nil
 	end
-end
 
-function Signal.new()
-	return setmetatable({ _head = false }, Signal)
-end
-
-function Signal.wrap(signal)
-	local wrapper = setmetatable({ _head = false }, Signal)
-	wrapper.RBXScriptConnection = rbxConnect(signal, function(...)
-		fire(wrapper, ...)
-	end)
-	return wrapper
+	if shouldTrackConnections(self) then
+		self.OnConnectionsChanged:Destroy()
+		self.OnConnectionsChanged = nil
+	end
 end
 
 function Signal.is(object)
-	return typeof(object) == "table" and getmetatable(object) == Signal
+	return type(object) == "table" and getmetatable(object) == Signal
+end
+
+function Signal.new(trackConnections)
+	local self = setmetatable({ _head = false }, Signal)
+
+	if type(trackConnections) == "boolean" and trackConnections then
+		self.TotalConnections = 0
+		self.OnConnectionsChanged = Signal.new(false)
+	end
+
+	return self
+end
+
+function Signal.wrap(signal, trackConnections)
+	local wrapper = Signal.new(trackConnections)
+
+	wrapper.RBXScriptConnection = rbxConnect(signal, function(...)
+		fire(wrapper, ...)
+	end)
+
+	return wrapper
 end
 
 Signal.Connect = connect
@@ -239,5 +280,5 @@ Signal.DisconnectAll = disconnectAll
 Signal.Destroy = destroy
 
 return {
-	Signal = { new = Signal.new, wrap = Signal.wrap, is = Signal.is },
+	["Signal"] = { ["is"] = Signal.is, ["new"] = Signal.new, ["wrap"] = Signal.wrap },
 }
