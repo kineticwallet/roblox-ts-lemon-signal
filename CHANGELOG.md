@@ -1,4 +1,4 @@
-## Changelog of `@packages/lemon-signal`
+## Changelog of `@rbxts/lemon-signal`
 
 ## v1.0.0
 - add the support to track the connections made, indirect support of `Topbar+`
